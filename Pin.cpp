@@ -10,6 +10,7 @@ Pin::Pin(int pn, PinType pt, PinMode pm)
     pinNum = pn;
     type   = pt;
     mode   = pm;
+    status = PinStatus::Off;
 
     // set the pin mode
     switch (type)
@@ -32,23 +33,31 @@ void Pin::write(int data)
     // TODO: support INPUT_PULLUP
     switch (mode)
     {
-    case Input:
+    case PinMode::Input:
 	return;
 	break;
-    case Output:
+    case PinMode::Output:
 	switch (type)
 	{
-	case Analog:
+	case PinType::Analog:
+	    if (data > 0)
+		status = PinStatus::On;
+	    else
+		status = PinStatus::Off;
+
 	    analogWrite(pinNum, data);
 	    break;
-	case Digital:
+	case PinType::Digital:
 	    digitalWrite(pinNum, data);
 	    break;
 	};
 	break;
+    case PinMode::InputPullup:
+	break;
     }
     return;
 };
+
 
 int Pin::read()
 {
@@ -70,6 +79,32 @@ int Pin::read()
 	}
     }
     return 0;
+}
+
+
+void Pin::on()
+{
+    write(HIGH);
+}
+
+void Pin::off()
+{
+    write(LOW);
+}
+
+void Pin::toggle()
+{
+    switch (status)
+    {
+    case PinStatus::On:
+	status = PinStatus::Off;
+	write(LOW);
+	break;
+    case PinStatus::Off:
+	status = PinStatus::On;
+	write(HIGH);
+	break;
+    }
 }
 
 Pin::~Pin()

@@ -15,6 +15,16 @@ enum PinMode {
     InputPullup,
 };
 
+enum PinStatus {
+    On,
+    Off,
+};
+
+enum ClockType {
+    Increment,
+    Decrement,
+};
+
 enum BoxingMode {
     Break,
     Round,
