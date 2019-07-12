@@ -1,0 +1,34 @@
+#######################################
+# Syntax Coloring
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Pin                            KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+write                          KEYWORD2
+read                           KEYWORD2
+begin                          KEYWORD2
+isPlaying                      KEYWORD2
+
+#######################################
+# Constants/Enums (LITERAL1)
+#######################################
+
+Input                          LITERAL1
+Output                         LITERAL1
+InputPullup                    LITERAL1
+Analog                         LITERAL1
+Digital                        LITERAL1
+RESOLUTION                     LITERAL1
+BUZZPIN                        LITERAL1
+ROUNDPIN                       LITERAL1
+BREAKPIN                       LITERAL1
+BUZZTIME                       LITERAL1
+
