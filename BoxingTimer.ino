@@ -3,65 +3,109 @@
 // For Arduino assistance, consult the Arduino documentation page
 // https://www.arduino.cc/reference/en/
 
-#define BREAKTIME   60;
-#define ROUNDTIME  180;
-#define BUZZPIN      0; // set this to your buzzer's pin
-#define ROUNDPIN     0; // set these to the two pins of your LEDs
-#define BREAKPIN     0;
-#define BUZZTIME     3;
+#include "include/types.h"
+#include "include/Pin.h"
 
 
-// Define the modes of our clock
-enum BoxingMode {
-  Break,
-  Round,
-};
+#define BREAKTIME   60
+#define ROUNDTIME  180
+#define BUZZPIN     11 // set this to your buzzer's pin
+#define ROUNDPIN     7 // set these to the two pins of your LEDs
+#define BREAKPIN     2
+#define BUZZTIME     3
 
 
 // Declare variables (leave uninitialized)
 BoxingMode current_mode;
 byte current_time; // maximum possible value is 255
 
-//int buzzer_pin;    // find a pin to output a PWM to the Piezo speaker
-//int round_led_pin; // allocate a pin for the ROUND status LED
-//int break_led_pin; // allocate a pin for the BREAK status LED
-
+int buzzer_pin;    // find a pin to output a PWM to the Piezo speaker
+int round_led_pin; // allocate a pin for the ROUND status LED
+int break_led_pin; // allocate a pin for the BREAK status LED
+int tmp_pin;       // tmp for swap purposes
 //
 
-// Play the Piezo buzzer for a short duration
-void play_buzzer()
-{
-  // TODO: buzzer stuff
-}
+Pin buzzer(BUZZPIN, Analog, Output);
+Pin roundLED(ROUNDPIN, Digital, Output);
+Pin breakLED(BREAKPIN, Digital, Output);
 
 
-// Invert our Boxing mode function
-// Used when we want to switch modes on the timer
-void invert_mode(BoxingMode *bm)
+// swap two values A and B
+// an external tmp variable is also required
+void swap(int *a, int *b, int *tmp)
 {
-  switch (*bm)
-  {
-    case Break:
-      *bm = Round;
-      break;
-    case Round:
-      *bm = Break;
-      break;
-  }
+  *tmp = *a;
+  *a = *b;
+  *b = *tmp;
+
   return;
 }
 
-void set_time(byte *timer, BoxingMode *bm)
+void dummy_func(int value)
+{
+  return;
+}
+
+// Play the Piezo buzzer for a short duration
+void play_buzzer(byte *timer, BellMode mode)
+{
+  // TODO: buzzer stuff
+  if (mode == Switch)
+  {
+    switch (*timer)
+    {
+      case 180:
+        analogWrite(BUZZPIN, 128);
+        break;
+      case 177:
+        analogWrite(BUZZPIN, 0);
+        break;
+    }
+  } else {
+    switch (*timer)
+    {
+      case 10:
+        analogWrite(BUZZPIN, 145);
+        break;
+      case 9:
+        analogWrite(BUZZPIN, 0);
+    }
+    
+  }
+}
+
+
+// use the swap function to turn off one pin and another on
+void alternate_leds(int *a, int *b, int *tmp)
+{
+  // turn the A pin off
+  digitalWrite(*a, LOW);
+
+  // turn the B pin on
+  digitalWrite(*b, HIGH);
+
+  // swap the two for the next alternation
+  swap(a, b, tmp);
+}
+
+
+// Set our timer based on our current mode,
+// and invert the mode to the next phase
+void set_time_invert_mode(byte* timer, BoxingMode *bm)
 {
   switch (*bm)
   {
     case Break:
-      *timer = BREAKTIME;
-      break;
-    case Round:
+      *bm    = Round;
       *timer = ROUNDTIME;
       break;
+    case Round:
+      *bm = Break;
+      *timer = BREAKTIME;
+      break;
   }
+
+  return;
 }
 
 
@@ -73,8 +117,13 @@ void setup() {
   current_time = BREAKTIME;
 
   // get pins ready for WRITE outputs
-  //pinMode(0, OUTPUT);
-  //pinMode(0, OUTPUT);
+  pinMode(ROUNDPIN, OUTPUT);
+  pinMode(BREAKPIN, OUTPUT);
+  pinMode(BUZZPIN, OUTPUT);
+
+  //analogWrite(BUZZPIN, 128);
+
+  dummy_func(HIGH);
 
   return;
 }
@@ -97,13 +146,16 @@ void loop() {
   // subtract from our timer
   current_time -= 1;
 
+  // check if we need to turn the buzzer pin on
+  // there will be a normal check and a x<=10 check
+  play_buzzer(&current_time, Switch);
+  if (current_time <= 10)
+    play_buzzer(&current_time, Warning);
+
   // check if it equals zero
   if (current_time == 0)
   {
-    invert_mode(&current_mode);
-    set_time(&current_time, &current_mode);
-    play_buzzer();
-
+    set_time_invert_mode(&current_time, &current_mode);
   }
 
   // delay 1000 milliseconds (one second)
