@@ -27,6 +27,7 @@ void Clock::update()
     // check if milliseconds hit 1000, meaning 1 second passed
     if (milliseconds >= 1000)
     {
+	milliseconds = 0;
 	switch (type)
 	{
 	case ClockType::Increment:
