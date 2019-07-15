@@ -30,10 +30,11 @@ enum BoxingMode {
     Round,
 };
 
+/*
 enum BellMode {
     Warning,
     Switch,
 };
-
+*/
 
 #endif

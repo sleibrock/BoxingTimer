@@ -2,9 +2,9 @@
 #include "include/Clock.h"
 
 
-Clock::Clock(int reso, ClockType ct)
+Clock::Clock(ClockType ct)
 {
-    resolution = reso;
+    resolution = RESOLUTION;
     type = ct;
     milliseconds = 0;
     seconds = 0;

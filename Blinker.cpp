@@ -19,12 +19,17 @@ Blinker::Blinker(Pin *p, Clock *c)
 
 void Blinker::update()
 {
+    // Blinker state is based purely on milliseconds
+    // Check <Clock.h>'s RESOLUTION #define to see
+    // how that's defined
+    // Switch statements are inherently fixed and need
+    // compile-time expressions
     switch ((*clock).milliseconds)
     {
     case 0:
 	(*pin).on();
 	break;
-    case 100:
+    case 50:
 	(*pin).off();
 	break;
     }

@@ -3,12 +3,17 @@
 
 
 
-Buzzer::Buzzer(Pin *p, Clock *c, BellMode bm)
+Buzzer::Buzzer(Pin *p, Clock *c)
 {
     pin = p;
     clock = c;
-    mode = bm;
 }
+
+
+void Buzzer::update()
+{
+}
+
 
 Buzzer::~Buzzer()
 {
