@@ -84,13 +84,29 @@ int Pin::read()
 
 void Pin::on()
 {
-    write(HIGH);
+    switch (type)
+    {
+    case PinType::Analog:
+	write(255);
+	break;
+    case PinType::Digital:
+	write(HIGH);
+	break;
+    }
     return;
 }
 
 void Pin::off()
 {
-    write(LOW);
+    switch (type)
+    {
+    case PinType::Analog:
+	write(0);
+	break;
+    case PinType::Digital:
+	write(LOW);
+	break;
+    }
     return;
 }
 
@@ -100,13 +116,11 @@ void Pin::toggle()
     {
     case PinStatus::On:
 	status = PinStatus::Off;
-	write(LOW);
-	return;
+	off();
 	break;
     case PinStatus::Off:
 	status = PinStatus::On;
-	write(HIGH);
-	return;
+	on();
 	break;
     }
     return;
