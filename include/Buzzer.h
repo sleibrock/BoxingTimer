@@ -11,13 +11,16 @@
 class Buzzer
 {
 public:
+    int ticks;
     Pin *pin;
     Clock *clock;
+    BellMode mode;
     
     Buzzer(Pin*, Clock*);
     ~Buzzer();
 
 
+    void set_mode(BellMode);
     void update();
 };
 

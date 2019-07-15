@@ -3,7 +3,19 @@
 
 // types.h header file
 // contains all structs/enumerations we might need
+// also contains #defines
 
+// define the resolution of the clock (how much in millis is used)
+// should not be changed, but if it is, modify it to a multiple
+// of 1000, otherwise the clock will not add seconds appropriately
+// constant assumption of 1000 milliseconds = 1 second
+#define RESOLUTION 50
+
+// compile time expression to represent ticks
+#define TICKS(N) (N * RESOLUTION)
+
+
+// enumerations section
 enum PinType {
     Analog,
     Digital,
@@ -30,11 +42,10 @@ enum BoxingMode {
     Round,
 };
 
-/*
 enum BellMode {
     Warning,
     Switch,
+    Inactive,
 };
-*/
 
 #endif

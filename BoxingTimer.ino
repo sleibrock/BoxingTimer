@@ -16,9 +16,7 @@
 #define BUZZPIN      11 // set this to your buzzer's pin
 #define ROUNDPIN      7 // set these to the two pins of your LEDs
 #define BREAKPIN      4
-#define BLINKPIN      2
-#define BUZZTIME      3
-//#define RESOLUTION  100 // number of milliseconds to update with
+#define BLINKPIN      2 // set this to a pin to blink every 1 second
 
 // initialize components here
 
@@ -37,6 +35,7 @@ Buzzer buzzer(&buzzerPin, &boxClock);
 // blinker LED
 Blinker blinky(&blinkPin, &boxClock);
 
+// Create a board to link components together
 Board boardState(&roundPin, &breakPin, &boxClock, &blinky, &buzzer);
 
 

@@ -5,11 +5,7 @@
 
 #include "types.h"
 
-// define the resolution of the clock (how much in millis is used)
-// should not be changed, but if it is, modify it to a multiple
-// of 1000, otherwise the clock will not add seconds appropriately
-// constant assumption of 1000 milliseconds = 1 second
-#define RESOLUTION 50
+#define RESOLUTION 50 
 
 
 
@@ -26,7 +22,6 @@ public:
 
     void set_time(int);
     void update();
-
     void wait();
 };
 

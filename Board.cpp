@@ -27,20 +27,16 @@ void Board::init_state()
 
 void Board::update()
 {
-    // first update the clock globally
-    (*clock).update();
-
-    // update any time-based components
-    (*blinky).update();
-
     // toggle between modes/LEDs based on clock
     switch ((*clock).seconds)
     {
     case 10:
 	// ring the 10 second bell
+	(*buzz).set_mode(BellMode::Warning);
 	break;
     case 0:
 	// switch the rounds, ring the bell
+	(*buzz).set_mode(BellMode::Switch);
 	switch (bm)
 	{
 	case BoxingMode::Break:
@@ -60,7 +56,12 @@ void Board::update()
     
     }
 
+    // update components
+    (*blinky).update();
+    (*buzz).update();
 
+    // lastly update the clock globally
+    (*clock).update();
     (*clock).wait();
 
     return;
