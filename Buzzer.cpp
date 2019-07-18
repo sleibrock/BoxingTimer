@@ -31,7 +31,7 @@ void Buzzer::update()
 	case TICKS(0):
 	    (*pin).write(WARNTONE1);
 	    break;
-	case TICKS(1):
+	case TICKS(5):
 	    (*pin).off();
 	    break;
 	case TICKS(10):

@@ -4,7 +4,6 @@
 
 
 
-
 Board::Board(Pin *r, Pin* b, Clock* c, Blinker* bl, Buzzer* bz)
 {
     roundLED = r;
@@ -28,32 +27,35 @@ void Board::init_state()
 void Board::update()
 {
     // toggle between modes/LEDs based on clock
-    switch ((*clock).seconds)
-    {
-    case 10:
-	// ring the 10 second bell
-	(*buzz).set_mode(BellMode::Warning);
-	break;
-    case 0:
-	// switch the rounds, ring the bell
-	(*buzz).set_mode(BellMode::Switch);
-	switch (bm)
+    // if our clock is at exactly zero milliseconds
+    // it indicates a new second just occurred
+    if ((*clock).milliseconds == 0) {
+	switch ((*clock).seconds)
 	{
-	case BoxingMode::Break:
-	    bm = BoxingMode::Round;
-	    (*breakLED).off();
-	    (*roundLED).on();
-	    (*clock).set_time(180);
+	case 10:
+	    // ring the 10 second bell
+	    (*buzz).set_mode(BellMode::Warning);
 	    break;
-	case BoxingMode::Round:
-	    bm = BoxingMode::Break;
-	    (*breakLED).on();
-	    (*roundLED).off();
-	    (*clock).set_time(60);
+	case 0:
+	    // switch the rounds, ring the bell
+	    (*buzz).set_mode(BellMode::Switch);
+	    switch (bm)
+	    {
+	    case BoxingMode::Break:
+		bm = BoxingMode::Round;
+		(*breakLED).off();
+		(*roundLED).on();
+		(*clock).set_time(180);
+		break;
+	    case BoxingMode::Round:
+		bm = BoxingMode::Break;
+		(*breakLED).on();
+		(*roundLED).off();
+		(*clock).set_time(60);
+		break;
+	    }
 	    break;
 	}
-	break;
-    
     }
 
     // update components
